@@ -7,11 +7,10 @@
     <style>
         /* --- CONFIGURACIÓN GENERAL --- */
         :root {
-            --bg-principal: #ffb7b2; /* Rosa pastel de fondo */
-            --bg-interfaz: #ffffff;
-            --rosa-kitty: #ff4d6d;
-            --rosa-suave: #ffe5ec;
-            --texto: #2b2d42;
+            --bg-principal: #f3d5dc; /* Fondo rosa suave como el de tu pantalla */
+            --rosa-mono: #ff8fa3;
+            --rosa-mono-oscuro: #ff4d6d;
+            --borde-kitty: #2b2b2b;
             --fuente: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -24,7 +23,6 @@
         body {
             font-family: var(--fuente);
             background-color: var(--bg-principal);
-            color: var(--texto);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -33,289 +31,388 @@
             overflow: hidden;
         }
 
-        /* --- CONTENEDOR EN GRANDE --- */
-        .contenedor-kitty {
-            background-color: var(--bg-interfaz);
+        /* --- CONTENEDOR GRANDE --- */
+        .contenedor-principal {
+            background-color: #ffffff;
             width: 100%;
-            max-width: 700px; /* Tamaño grande para PC y adaptable a celular */
+            max-width: 650px;
             height: 85vh;
-            max-height: 650px;
+            max-height: 680px;
             border-radius: 32px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            border: 4px solid #ffffff;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
             padding: 30px;
-            position: relative;
+            border: 4px solid #fff;
         }
 
-        /* --- PANTALLA EN GRANDE DE KITTY --- */
-        .pantalla-animacion {
-            flex-grow: 1;
-            width: 100%;
-            background: linear-gradient(to bottom, #fff0f5, #ffffff);
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            border: 2px dashed #ffb3c1;
-        }
-
-        /* --- EL TEXTO DEL ESTADO --- */
         .estado-texto {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--rosa-kitty);
-            margin-bottom: 20px;
+            color: var(--rosa-mono-oscuro);
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-shadow: 1px 1px 0px #fff;
-            z-index: 5;
+            margin-bottom: 10px;
+            min-height: 35px;
+            text-align: center;
         }
 
-        /* --- KITTY EN ARTE ASCII (EN GRANDE) --- */
-        .kitty-avatar {
-            font-family: monospace;
-            font-size: clamp(10px, 1.8vw, 15px); /* Se ajusta al tamaño de pantalla */
-            line-height: 1.2;
-            white-space: pre;
-            color: #000000;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            transform: scale(1.1);
-            user-select: none;
+        /* --- PANTALLA DE JUEGO --- */
+        .escenario {
+            flex-grow: 1;
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #ffffff 40%, #fff5f7 100%);
+            border-radius: 20px;
+            overflow: hidden;
         }
 
-        /* Animación por defecto (Respirar/Flotar) */
+        /* --- DIBUJO VECTORIAL DE HELLO KITTY (EN GRANDE) --- */
+        .kitty-cuerpo {
+            position: relative;
+            width: 280px;
+            height: 220px;
+            transition: all 0.5s ease;
+        }
+
+        /* Animación base de respiración física */
         .animacion-normal {
-            animation: flotarKitty 3s ease-in-out infinite;
+            animation: respirar 3s ease-in-out infinite;
         }
 
-        /* Animación cuando come */
-        .animacion-comer {
-            animation: comerKitty 0.4s ease-in-out infinite alternate;
+        /* Cabeza */
+        .kitty-cabeza {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border: 7px solid var(--borde-kitty);
+            border-radius: 140px / 110px;
+            z-index: 2;
         }
 
-        /* Animación cuando juega */
-        .animacion-jugar {
-            animation: jugarKitty 0.5s ease-in-out infinite alternate;
+        /* Oreja Izquierda */
+        .oreja-izq {
+            position: absolute;
+            top: -15px;
+            left: 15px;
+            width: 75px;
+            height: 75px;
+            background-color: #ffffff;
+            border: 7px solid var(--borde-kitty);
+            border-radius: 25px 0 0 0;
+            transform: rotate(-12deg) skewX(-15deg);
+            border-bottom: none;
+            border-right: none;
+            z-index: 1;
         }
 
-        /* Animación cuando duerme */
-        .animacion-dormir {
-            animation: dormirKitty 4s ease-in-out infinite;
-            opacity: 0.6;
+        /* Oreja Derecha */
+        .oreja-der {
+            position: absolute;
+            top: -15px;
+            right: 15px;
+            width: 75px;
+            height: 75px;
+            background-color: #ffffff;
+            border: 7px solid var(--borde-kitty);
+            border-radius: 0 25px 0 0;
+            transform: rotate(12deg) skewX(15deg);
+            border-bottom: none;
+            border-left: none;
+            z-index: 1;
         }
 
-        /* --- BOTONES DE INTERACCIÓN --- */
+        /* Los Ojos Redondos */
+        .ojo {
+            position: absolute;
+            top: 105px;
+            width: 17px;
+            height: 24px;
+            background-color: var(--borde-kitty);
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .ojo.izq { left: 65px; }
+        .ojo.der { right: 65px; }
+
+        /* Nariz Amarilla */
+        .nariz {
+            position: absolute;
+            top: 124px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 16px;
+            background-color: #ffea00;
+            border: 5px solid var(--borde-kitty);
+            border-radius: 50%;
+        }
+
+        /* Bigotes clásicos */
+        .bigote {
+            position: absolute;
+            width: 35px;
+            height: 6px;
+            background-color: var(--borde-kitty);
+            border-radius: 3px;
+        }
+
+        /* Bigotes Izquierdos */
+        .b-izq1 { top: 115px; left: -15px; transform: rotate(10deg); }
+        .b-izq2 { top: 130px; left: -20px; transform: rotate(0deg); }
+        .b-izq3 { top: 145px; left: -15px; transform: rotate(-10deg); }
+
+        /* Bigotes Derechos */
+        .b-der1 { top: 115px; right: -15px; transform: rotate(-10deg); }
+        .b-der2 { top: 130px; right: -20px; transform: rotate(0deg); }
+        .b-der3 { top: 145px; right: -15px; transform: rotate(10deg); }
+
+        /* --- EL FAMOSO MOÑO ROSA --- */
+        .mono-contenedor {
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            z-index: 3;
+            transform: rotate(15deg);
+        }
+
+        .mono-centro {
+            width: 42px;
+            height: 42px;
+            background-color: var(--rosa-mono);
+            border: 6px solid var(--borde-kitty);
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mono-lado {
+            position: absolute;
+            width: 55px;
+            height: 50px;
+            background-color: var(--rosa-mono);
+            border: 6px solid var(--borde-kitty);
+            border-radius: 18px;
+            top: -4px;
+        }
+
+        .mono-lado.izq { left: -42px; transform: rotate(-15deg); }
+        .mono-lado.der { right: -42px; transform: rotate(15deg); }
+
+        /* --- INTERFAZ DE BOTONES --- */
         .zona-botones {
             width: 100%;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin-top: 25px;
+            margin-top: 15px;
         }
 
-        .btn-accion {
-            background-color: var(--rosa-suave);
-            color: var(--rosa-kitty);
-            border: 2px solid var(--rosa-kitty);
-            padding: 15px 10px;
-            border-radius: 18px;
+        .btn {
+            background-color: #fff0f3;
+            color: var(--rosa-mono-oscuro);
+            border: 3px solid var(--rosa-mono-oscuro);
+            padding: 14px;
+            border-radius: 20px;
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            box-shadow: 0 4px 0px var(--rosa-kitty);
+            box-shadow: 0 5px 0 var(--rosa-mono-oscuro);
         }
 
-        .btn-accion:hover {
-            background-color: var(--rosa-kitty);
-            color: #ffffff;
+        .btn:hover {
+            background-color: var(--rosa-mono-oscuro);
+            color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 6px 0px #c9184a;
+            box-shadow: 0 7px 0 #c9184a;
         }
 
-        .btn-accion:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0px transparent;
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 0 0 transparent;
         }
 
-        /* --- EFECTOS ESPECIALES FLOTANTES --- */
-        .efecto-flotante {
+        /* --- EFECTOS DE ACCIÓN --- */
+        .efecto-visual {
             position: absolute;
-            font-size: 2.5rem;
-            pointer-events: none;
-            animation: desvanecerEfecto 1.5s ease-out forwards;
-        }
-
-        /* --- KEYFRAMES DE ANIMACIONES --- */
-        @keyframes flotarKitty {
-            0%, 100% { transform: translateY(0) scale(1.1); }
-            50% { transform: translateY(-10px) scale(1.1); }
-        }
-
-        @keyframes comerKitty {
-            0% { transform: scale(1.1) rotate(0deg); }
-            100% { transform: scale(1.15) rotate(3deg); }
-        }
-
-        @keyframes jugarKitty {
-            0% { transform: translate(-10px, 0) scale(1.1) rotate(-5deg); }
-            100% { transform: translate(10px, -10px) scale(1.1) rotate(5deg); }
-        }
-
-        @keyframes dormirKitty {
-            0%, 100% { transform: scale(1) translateY(5px); }
-            50% { transform: scale(0.95) translateY(5px); }
-        }
-
-        @keyframes desvanecerEfecto {
-            0% { transform: translateY(20px) scale(0.5); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
-        }
-
-        /* Moño decorativo en la esquina */
-        .mono-decorativo {
-            position: absolute;
-            top: -15px;
-            left: -15px;
             font-size: 3rem;
-            transform: rotate(-20deg);
+            pointer-events: none;
+            animation: flotarEfecto 1.5s ease-out forwards;
+            z-index: 10;
+        }
+
+        /* --- ANIMACIONES CSS --- */
+        @keyframes respirar {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.02); }
+        }
+
+        @keyframes comer {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(-5deg); }
+        }
+
+        @keyframes bailar {
+            0% { transform: translateX(-15px) rotate(-8deg); }
+            100% { transform: translateX(15px) rotate(8deg); }
+        }
+
+        @keyframes flotarEfecto {
+            0% { transform: translateY(30px) scale(0.5); opacity: 0; }
+            30% { opacity: 1; }
+            100% { transform: translateY(-120px) scale(1.4); opacity: 0; }
+        }
+
+        /* Estados de los ojos mediante JS */
+        .ojos-dormidos {
+            height: 6px !important;
+            border-radius: 0 !important;
+            top: 115px !important;
+            background-color: transparent !important;
+            border-top: 6px solid var(--borde-kitty);
+        }
+
+        .ojos-felices {
+            height: 10px !important;
+            background-color: transparent !important;
+            border: 5px solid var(--borde-kitty);
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+            border-radius: 50% 50% 0 0;
+            transform: scaleY(-1);
+            top: 110px !important;
         }
     </style>
 </head>
 <body>
 
-    <div class="contenedor-kitty">
-        <div class="mono-decorativo">🎀</div>
-        
-        <!-- PANTALLA DONDE PASA TODO -->
-        <div class="pantalla-animacion" id="pantalla">
-            <div class="estado-texto" id="estado">¡Hola! Soy Hello Kitty 💕</div>
-            
-            <!-- Personaje hecho en Arte ASCII detallado -->
-            <pre class="kitty-avatar animacion-normal" id="kitty">
-     /\_/\  ====  /\_/\
-    ( o.o )      ( o.o )
-   ==  ♥  ==    ==  ♥  ==
-   /       \    /       \
-  |         |  |         |
-  ()_______()  ()_______()
-            </pre>
+    <div class="contenedor-principal">
+        <!-- Texto del estado superior -->
+        <div class="estado-texto" id="status">¡Hola! Soy Hello Kitty 💕</div>
+
+        <!-- Escenario de dibujo de Kitty -->
+        <div class="escenario" id="escenario">
+            <div class="kitty-cuerpo animacion-normal" id="kitty">
+                
+                <!-- Moño Rosa Completo -->
+                <div class="mono-contenedor">
+                    <div class="mono-lado izq"></div>
+                    <div class="mono-centro"></div>
+                    <div class="mono-lado der"></div>
+                </div>
+
+                <!-- Cabeza con todos sus elementos vectoriales -->
+                <div class="kitty-cabeza">
+                    <div class="oreja-izq"></div>
+                    <div class="oreja-der"></div>
+                    
+                    <!-- Ojos -->
+                    <div class="ojo izq" id="ojoIzq"></div>
+                    <div class="ojo der" id="ojoDer"></div>
+                    
+                    <!-- Nariz -->
+                    <div class="nariz"></div>
+
+                    <!-- Bigotes Izquierdos -->
+                    <div class="bigote b-izq1"></div>
+                    <div class="bigote b-izq2"></div>
+                    <div class="bigote b-izq3"></div>
+
+                    <!-- Bigotes Derechos -->
+                    <div class="bigote b-der1"></div>
+                    <div class="bigote b-der2"></div>
+                    <div class="bigote b-der3"></div>
+                </div>
+
+            </div>
         </div>
 
-        <!-- BOTONES DONDE TÚ DECIDES QUÉ HACE -->
+        <!-- Panel de control interactivo -->
         <div class="zona-botones">
-            <button class="btn-accion" onclick="cambiarEstado('comer')">
-                <span>🍎</span> Dar Manzana
-            </button>
-            <button class="btn-accion" onclick="cambiarEstado('jugar')">
-                <span>🎨</span> Dibujar
-            </button>
-            <button class="btn-accion" onclick="cambiarEstado('dormir')">
-                <span>⭐</span> Dormir
-            </button>
+            <button class="btn" onclick="interactuar('comer')">🍎 Alimentar</button>
+            <button class="btn" onclick="interactuar('jugar')">🎈 Jugar</button>
+            <button class="btn" onclick="interactuar('dormir')">⭐ Dormir</button>
         </div>
     </div>
 
     <script>
-        const kittyElemento = document.getElementById('kitty');
-        const estadoTexto = document.getElementById('estado');
-        const pantalla = document.getElementById('pantalla');
+        const kitty = document.getElementById('kitty');
+        const status = document.getElementById('status');
+        const escenario = document.getElementById('escenario');
+        const ojoIzq = document.getElementById('ojoIzq');
+        const ojoDer = document.getElementById('ojoDer');
 
-        // Guardamos el dibujo original para cuando vuelva a estar normal
-        const kittyNormal = `
-     /\\_/\\  ====  /\\_/\\
-    ( o.o )      ( o.o )
-   ==  ♥  ==    ==  ♥  ==
-   /       \\    /       \\
-  |         |  |         |
-  ()_______()  ()_______()`;
+        let modoActual = null;
 
-        // Versión durmiendo con los ojitos cerrados
-        const kittyDurmiendo = `
-     /\\_/\\  ====  /\\_/\\
-    ( -.- )      ( -.- )
-   ==  z  ==    ==  z  ==
-   /       \\    /       \\
-  |         |  |         |
-  ()_______()  ()_______()`;
-
-        let temporizadorRegreso;
-
-        function cambiarEstado(accion) {
-            // Limpiar cualquier regreso a la normalidad previo
-            clearTimeout(temporizadorRegreso);
+        function interactuar(accion) {
+            // Limpiar clases previas de ojos y animaciones
+            kitty.style.animation = "none";
+            ojoIzq.className = "ojo izq";
+            ojoDer.className = "ojo der";
             
-            // Quitamos todas las animaciones anteriores
-            kittyElemento.className = "kitty-avatar";
+            // Forzar reinicio de animación en el navegador
+            void kitty.offsetWidth;
 
             if (accion === 'comer') {
-                estadoTexto.textContent = "Yum, ¡Deliciosa manzana! 🍎";
-                kittyElemento.innerText = kittyNormal;
-                kittyElemento.classList.add('animacion-comer');
-                crearEfectoFlotante('🍎');
-                crearEfectoFlotante('✨');
+                status.textContent = "¡Mmm, qué rico! 🍎✨";
+                kitty.style.animation = "comer 0.5s ease infinite alternate";
+                ojoIzq.classList.add('ojos-felices');
+                ojoDer.classList.add('ojos-felices');
+                lanzarEfecto('🍎');
+                lanzarEfecto('✨');
                 
-                // Vuelve a estar normal en 3 segundos
-                temporizadorRegreso = setTimeout(volverNormal, 3000);
+                setTimeout(volverNormal, 3500);
             } 
             else if (accion === 'jugar') {
-                estadoTexto.textContent = "¡Haciendo arte contigo! 🎨✨";
-                kittyElemento.innerText = kittyNormal;
-                kittyElemento.classList.add('animacion-jugar');
-                crearEfectoFlotante('🎨');
-                crearEfectoFlotante('💖');
+                status.textContent = "¡Yaaay, qué divertido! 🎈💕";
+                kitty.style.animation = "bailar 0.4s ease-in-out infinite alternate";
+                lanzarEfecto('🎈');
+                lanzarEfecto('💖');
                 
-                temporizadorRegreso = setTimeout(volverNormal, 4000);
+                setTimeout(volverNormal, 4000);
             } 
             else if (accion === 'dormir') {
-                estadoTexto.textContent = "Zzz... Buenas noches... ⭐";
-                kittyElemento.innerText = kittyDurmiendo;
-                kittyElemento.classList.add('animacion-dormir');
+                status.textContent = "Zzz... Buenas noches ⭐";
+                kitty.style.animation = "respirar 4s ease-in-out infinite";
+                ojoIzq.classList.add('ojos-dormidos');
+                ojoDer.classList.add('ojos-dormidos');
+                lanzarEfecto('💤');
                 
-                // Efecto continuo de burbujas de sueño mientras duerme
-                crearEfectoFlotante('💤');
-                setTimeout(() => { if(estadoTexto.textContent.includes("Zzz")) crearEfectoFlotante('💤') }, 1000);
-                setTimeout(() => { if(estadoTexto.textContent.includes("Zzz")) crearEfectoFlotante('💤') }, 2000);
-
-                temporizadorRegreso = setTimeout(volverNormal, 5000);
+                setTimeout(volverNormal, 5000);
             }
         }
 
         function volverNormal() {
-            estadoTexto.textContent = "¡Te quiero mucho! 💕";
-            kittyElemento.innerText = kittyNormal;
-            kittyElemento.className = "kitty-avatar animacion-normal";
+            status.textContent = "¡Te quiero muchísimo! 🥰";
+            ojoIzq.className = "ojo izq";
+            ojoDer.className = "ojo der";
+            kitty.style.animation = "respirar 3s ease-in-out infinite";
         }
 
-        function crearEfectoFlotante(emoji) {
-            const efecto = document.createElement('div');
-            efecto.classList.add('efecto-flotante');
-            efecto.textContent = emoji;
+        function lanzarEfecto(emoji) {
+            const el = document.createElement('div');
+            el.classList.add('efecto-visual');
+            el.textContent = emoji;
             
-            // Posición aleatoria en la pantalla de la Kitty
-            const x = Math.random() * (pantalla.offsetWidth - 60) + 30;
-            const y = pantalla.offsetHeight / 2;
+            // Posicionamiento flotante aleatorio
+            const x = Math.random() * (escenario.offsetWidth - 100) + 50;
+            const y = escenario.offsetHeight / 2;
             
-            efecto.style.left = `${x}px`;
-            efecto.style.top = `${y}px`;
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
             
-            pantalla.appendChild(efecto);
-            
-            // Eliminar del código después de que termine la animación
-            setTimeout(() => efecto.remove(), 1500);
+            escenario.appendChild(el);
+            setTimeout(() => el.remove(), 1500);
         }
     </script>
 </body>
